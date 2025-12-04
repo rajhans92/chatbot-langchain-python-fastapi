@@ -1,6 +1,6 @@
-from PyJWT import jwt
+import jwt
 from datetime import datetime, timedelta
-from config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_TOKEN_TIME_HOURS
+from app.helpers.config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_TOKEN_TIME_HOURS
 
 def create_jwt_token(data: dict) -> str:
     to_encode = data.copy()

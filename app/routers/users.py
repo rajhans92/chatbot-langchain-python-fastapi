@@ -4,7 +4,7 @@ from app.helpers.database import get_db
 from app.schemas.usersSchemas import UserCreate, UserLogin
 from app.models.usersModels import Users
 from app.helpers.hashing import hash_password, verify_password
-from app.helpers.jwt import create_jwt_token
+from app.helpers.jwt import create_jwt_token, get_current_user
 
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -37,5 +37,5 @@ def login_user(user: UserLogin, db: Session = Depends(get_db)):
     return {"message": "User logged in successfully", "token":jwt_token, "user_name": db_user.name, "user_email":db_user.email}
 
 @router.post("/profile")
-def get_user_profile():
-    return {"message": "User profile data"}
+def get_user_profile(user: Users = Depends(get_current_user)):
+    return {"message": "User profile data", "user": {"id": user.id, "name": user.name, "email": user.email}}

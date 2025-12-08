@@ -22,15 +22,11 @@ def chatbot(message: ChatRequest, chat_history: ChatHistoryRequest) -> str:
         ("human", "{input}")
     ])
 
-    chain = (
-        {
-            "history": lambda _: memory.load_memory_variables({})["history"],
-            "input": lambda _: message.message
-        }
-        | prompt
-        | model
-    )
+    chain =  prompt | model
 
-    ai_response = chain.invoke({})
+    ai_response = chain.invoke({
+            "history": memory.load_memory_variables({})["history"],
+            "input": message.message
+        })
 
     return ai_response.content

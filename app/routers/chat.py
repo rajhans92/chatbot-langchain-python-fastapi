@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.helpers.database import get_db
 from app.helpers.jwt import get_current_user
-from app.models.chatHistoryModel import ChatHistory, save_message
+from app.models.chatHistoryModel import ChatHistory
 from app.ai.chatAI import chat_endpoint
+from app.schemas.chatSchemas import ChatRequest
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-@router.post("/chat")
-def chat_endpoint(message: str, user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+@router.post("/ai")
+def chat_endpoint(message: ChatRequest, user: str = Depends(get_current_user), db: Session = Depends(get_db)):
     
-    chatHistory = db.query(ChatHistory).filter(ChatHistory.user_id == user.id).all()
+    chatHistory = db.query(ChatHistory.role, ChatHistory.message).filter(ChatHistory.user_id == user.id).all()
 
     ai_response = chat_endpoint(message,chatHistory)
 

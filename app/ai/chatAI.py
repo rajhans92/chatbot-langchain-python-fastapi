@@ -3,11 +3,11 @@ from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableSequence
 from app.helpers.config import OPENAI_API_KEY
-from app.schemas.chatSchemas import ChatHistoryRequest
+from app.schemas.chatSchemas import ChatHistoryRequest,ChatRequest
 
 model = ChatOpenAI(model="gpt-4.1")
 
-def chat_endpoint(message: str, chat_history: ChatHistoryRequest) -> str:
+def chatbot(message: ChatRequest, chat_history: ChatHistoryRequest) -> str:
     memory = ConversationBufferMemory(return_messages=True)
         
     for msg in chat_history:
@@ -25,12 +25,12 @@ def chat_endpoint(message: str, chat_history: ChatHistoryRequest) -> str:
     chain = (
         {
             "history": lambda _: memory.load_memory_variables({})["history"],
-            "input": message
+            "input": lambda _: message.message
         }
         | prompt
         | model
     )
 
-    ai_response = chain.invoke({"input": message})
+    ai_response = chain.invoke({})
 
     return ai_response.content

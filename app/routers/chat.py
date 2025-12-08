@@ -26,7 +26,7 @@ def chat_endpoint(message: ChatRequest, user: str = Depends(get_current_user), d
         role="assistant",
         message=ai_response
     ))
- 
+   
     db.commit()
 
     return {"response": ai_response}

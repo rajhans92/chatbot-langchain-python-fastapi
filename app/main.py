@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from app.helpers.database import engine, Base
 from app.routers import users
+from app.routers import chat
 from app.helpers.exceptionHandler import (
     http_exception_handler,
     validation_exception_handler,
@@ -19,6 +20,7 @@ app.add_exception_handler(ValueError, value_error_handler)
 
 
 app.include_router(users.router,prefix="/api/v1")
+app.include_router(chat.router,prefix="/api/v1")
 
 
 
